@@ -1,53 +1,114 @@
 <div class="container">
-  <form action="" class="col-md-6">
-    <div class="row">
-      <div class="well">
-        <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
-        <div class="col-md-7">
-          <input type="week" ng-model="string" class="form-control">
-        </div>
-        <div class="col-md-5">
-          <select>
-            <option value="1">1</option>
+  <form action="" class="col-md-12">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="well">
+          <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
+          <div ng-controller="DatepickerCtrl">
+            <div class="row">
+              <div class="col-md-6">
+                <p class="input-group">
+                  <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                  <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </p>
+              </div>
+              <div class="col-md-6">
+                <select class="form-control" style="float: left; width: calc(50% - 5px);">
+                  <option value="1">1</option>
 
-          </select>:
-          <select name="" id="">
-            <option value="1">1</option>
+                </select>
+                <strong style="position:relative; top: 6px; left: 3px">:</strong>
+                <select name="" id="" class="form-control" style="float: right; width: calc(50% - 5px)">
+                  <option value="1">1</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <input type="text" id="pac-input" class="form-control" placeholder="Pickup address [ALT + P]">
+      </div>
+      <br>
+      <div class="row">
+        <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Meeting point details"></textarea>
+      </div>
+      <br>
+      <div class="row">
+        <div class="btn-group">
+          <label class="btn btn-primary" ng-model="checkModel.left" uib-btn-checkbox><i class="glyphicon glyphicon-plus"></i> VIA</label>
+          <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox> Switch</label>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <input type="text" id="pac-input1"  class="form-control" placeholder="Dropoff address [ALT + D]">
+      </div>
+      <br>
+      <div class="row">
+        <textarea class="form-control" name="" id="" cols="30" rows="3" placeholder="Dropoff details"></textarea>
+      </div>
+      <br>
+      <div class="row">
+        <i class="fa fa-users"></i> <b>Number of Passangers:</b> <select name="passengers" class="form-control">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+        <br>
+      </div>
+      <div class="row">
+        <i class="fa fa-car"></i> <b>Vehicle:</b> <select name="passengers" class="form-control">
+        <option value="saloon">Saloon</option>
+        <option value="2">2</option>
+      </select>
+        <br>
+      </div>
+      <div class="row">
+        <i class="fa fa-info-circle"></i> <b>Payment method:</b>
+        <select name="passengers" class="form-control">
+          <option value="paypal">Paypal/Credit</option>
+          <option value="credit">Credit/debit</option>
+          <option value="cash">Cash</option>
+          <option value="bank">Bank Transfer</option>
+        </select>
+        <br>
+      </div>
+      <div class="row">
+        <i class="fa fa-money"></i> <b>Driver tip:</b> <input type="text" placeholder="0" ng-model="number" class="form-control">
+        <br>
+      </div>
+      <br>
+    </div>
+
+    <div class="col-md-6">
+      <div id="map" style="height: 400px"></div>
+      <br>
+      <input type="text" placeholder="Passenger full name" class="form-control">
+      <br>
+
+      <input type="email" class="form-control" name="email" ng-model="data.email" required minlength="5" maxlength="100" email-address-valability-validator placeholder="Passenger email">
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <select name="" id="" class="form-control">
+            <option value="prefix"><b>Choose prefix</b></option>
           </select>
         </div>
-        <br><br>
+        <div class="col-md-6">
+          <input type="text" placeholder="Passenger phone number" class="form-control">
+        </div>
       </div>
+      <br>
+      <textarea class="form-control" name="" id="" cols="30" rows="3" placeholder="Notes to company, address details or other information"></textarea>
+      <br>
+      <input type="text" placeholder="Redeem voucher" class="form-control">
     </div>
-
-    <div class="row">
-      <input type="text" class="form-control">
-    </div>
-    <br>
-    <div class="row">
-      <textarea name="" id="" cols="30" rows="3" class="form-control"></textarea>
-    </div>
-    <br>
-    <div class="row">
-      <div class="btn-group">
-        <label class="btn btn-primary" ng-model="checkModel.left" uib-btn-checkbox><i class="glyphicon glyphicon-plus"></i> VIA</label>
-        <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox> Switch</label>
-      </div>
-    </div>
-    <br>
-    <div class="row">
-      <input type="text" class="form-control">
-    </div>
-    <br>
-    <div class="row">
-      <textarea class="form-control" name="" id="" cols="30" rows="3"></textarea>
-    </div>
-    <br>
-    <div class="row">
-      <div class="btn-group">
-        <label class="btn btn-primary" ng-model="checkModel.left" uib-btn-checkbox><i class="glyphicon glyphicon-plus"></i> VIA</label>
-        <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox> Switch</label>
-      </div>
-    </div>
+    <button type="submit" class="form-control btn btn-default"><i class="fa fa-floppy-o"></i> Confirm Booking</button>
     <br>
   </form>
 </div>
+
