@@ -9,12 +9,17 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/intl-tel-input/build/css/intlTelInput.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- endbuild -->
+    <!--Gmaps-->
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing,places&language=en-GB&key=AIzaSyDVCZW62VZfzBIMWyck-rK_QlwHqGlM6EE&ibraries=places,geometry">
+    </script>
   </head>
   <body ng-app="angularApp">
     <!--[if lte IE 8]>
@@ -83,19 +88,18 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
+    <script src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!--Gmaps-->
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing,places&language=en-GB&key=AIzaSyDVCZW62VZfzBIMWyck-rK_QlwHqGlM6EE&ibraries=places,geometry">
-    </script>
+
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>
-    <script src="scripts/controllers/map.js"></script>g
+    <script src="scripts/controllers/map.js"></script>
     <script src="scripts/controllers/datepicker.js"></script>
     <script src="scripts/services/selectoptions.js"></script>
     <!-- endbuild -->

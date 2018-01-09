@@ -16,11 +16,11 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.bootstrap'
-
+    'ui.bootstrap',
+    'ngIntlTelInput'
   ])
-  .config(function ($routeProvider, $locationProvider) {
-    $locationProvider.hashPrefix('');
+  .config(function ($routeProvider, $locationProvider, ngIntlTelInputProvider) {
+    ngIntlTelInputProvider.set({initialCountry: 'us'});
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',

@@ -4,6 +4,7 @@
       <div class="row">
         <div class="well">
           <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
+
           <div>
 
             <div class="row" ng-controller="DatepickerCtrl">
@@ -32,7 +33,16 @@
       </div>
 
       <div class="row">
-        <input type="text" id="pickup" class="form-control pac-input" placeholder="Pickup address [ALT + P]">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-pushpin"></span>
+          </div>
+          <input type="text" id="pickup" class="form-control pac-input" placeholder="Pickup address [ALT + P]">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-remove"></span>
+          </div>
+        </div>
+
       </div>
       <br>
       <div class="row">
@@ -42,12 +52,20 @@
       <div class="row">
         <div class="btn-group">
           <label class="btn btn-primary" ng-click="" ng-model="checkModel.left" uib-btn-checkbox><i class="glyphicon glyphicon-plus"></i> VIA</label>
-          <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox> Switch</label>
+          <label class="btn btn-primary" ng-model="checkModel.right" uib-btn-checkbox><i class="fa fa-exchange" style="transform: rotate(90deg)"></i> </label>
         </div>
       </div>
       <br>
       <div class="row">
-        <input type="text" id="dropoff" class="form-control"  placeholder="Dropoff address [ALT + D]">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="fa fa-flag-checkered"></span>
+          </div>
+          <input type="text" id="dropoff" class="form-control"  placeholder="Dropoff address [ALT + D]">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-remove"></span>
+          </div>
+        </div>
       </div>
       <br>
       <div class="row">
@@ -88,28 +106,43 @@
     <div class="col-md-6">
       <div id="map" style="height: 400px"></div>
       <br>
-      <input type="text" placeholder="Passenger full name" class="form-control">
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-user"></span>
+        </div>
+        <input type="text" aria-describedby="basic-addon1" placeholder="Passenger full name" class="form-control">
+      </div>
       <br>
-
-      <input type="email" class="form-control" name="email" ng-model="data.email" required minlength="5" maxlength="100" email-address-valability-validator placeholder="Passenger email">
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-envelope"></span>
+        </div>
+        <input type="email" class="form-control" name="email" ng-model="data.email" required minlength="5" maxlength="100" email-address-valability-validator placeholder="Passenger email">
+      </div>
       <br>
       <div class="row">
-        <div class="col-md-6">
-          <select name="" id="" class="form-control">
-            <option value="prefix"><b>Choose prefix</b></option>
-          </select>
-        </div>
-        <div class="col-md-6">
-          <input type="text" placeholder="Passenger phone number" class="form-control">
+        <div class="input-group">
+          <div class="input-group-addon" id="position-fix-addon">
+            <span class="glyphicon glyphicon-phone"></span>
+          </div>
+          <div class="col-md-6">
+            <input type="text" ng-model="model.tel" ng-intl-tel-input placeholder="Choose prefix" >
+
+          </div>
+          <div class="col-md-6">
+            <input type="text" placeholder="Passenger phone number" class="form-control">
+          </div>
         </div>
       </div>
       <br>
       <textarea class="form-control" name="" id="" cols="30" rows="3" placeholder="Notes to company, address details or other information"></textarea>
       <br>
       <input type="text" placeholder="Redeem voucher" class="form-control">
+      <h2 id="price">$0</h2>
     </div>
     <button type="submit" class="form-control btn btn-default"><i class="fa fa-floppy-o"></i> Confirm Booking</button>
     <br>
+
   </form>
 </div>
 

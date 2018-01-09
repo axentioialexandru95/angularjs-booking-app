@@ -31,6 +31,8 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/moment/moment.js',
+      'bower_components/intl-tel-input/build/js/intlTelInput.js',
+      'bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

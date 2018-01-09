@@ -17,15 +17,24 @@ angular.module('angularApp')
 
     function initMap() {
 
+      // Instantiate a directions service.
+      var directionsDisplay;
+      var directionsService = new google.maps.DirectionsService();
+      directionsDisplay = new google.maps.DirectionsRenderer();
+
+
       // Instantiate two locations
-      var uluru = {lat: -25.363, lng: 131.044};
-      var uluru1 = {lat: -26.363, lng: 132.044};
+      var iasi = {lat: 47.156116, lng: 27.5169311};
+      var iasi2 = {lat: 49.156116, lng: 29.5169311};
 
       // Instantiates the Gmaps Map
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 8,
-        center: uluru
+        center: iasi,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
       });
+      // directionsDisplay.setPanel(document.getElementById('route'));
+      directionsDisplay.setMap(map);
 
       // Instantiates bounds
 
@@ -33,92 +42,143 @@ angular.module('angularApp')
         new google.maps.LatLng(47.1690611, 27.6199462),
         new google.maps.LatLng(45.6542889, 20.9462472)
       );
-
+      //
       // Options
       var options = {
         bounds: defaultBounds
       };
 
-      // Autocomplete with places from Gmaps
       var pickup = document.getElementById('pickup');
       var dropoff = document.getElementById('dropoff');
 
-
-      var autocomplete = new google.maps.places.Autocomplete(pickup, options);
-      var autocomplete2 = new google.maps.places.Autocomplete(dropoff, options);
-
-      // var places = new google.maps.places.PlacesService(map);
-      //
-      // autocomplete.addListener('place_changed', onPlaceChanged);
-      //
-      // function onPlaceChanged() {
-      //   var place = autocomplete.getPlace();
-      //   if (place.geometry) {
-      //     map.panTo(place.geometry.location);
-      //     map.setZoom(10);
-      //     search();
-      //   } else {
-      //     document.getElementById('pickup').placeholder = 'Enter a city';
-      //   }
-      // }
-      //
-      // autocomplete.addListener('place_changed', function() {
-      //   infowindow.close();
-      //   marker.setVisible(false);
-      //   var place = autocomplete.getPlace();
-      //   if (!place.geometry) {
-      //     // User entered the name of a Place that was not suggested and
-      //     // pressed the Enter key, or the Place Details request failed.
-      //     window.alert("No details available for input: '" + place.name + "'");
-      //     return;
-      //   }
-      //
-      //   // If the place has a geometry, then present it on a map.
-      //   if (place.geometry.viewport) {
-      //     map.fitBounds(place.geometry.viewport);
-      //   } else {
-      //     map.setCenter(place.geometry.location);
-      //     map.setZoom(17);  // Why 17? Because it looks good.
-      //   }
-      //   marker.setPosition(place.geometry.location);
-      //   marker.setVisible(true);
-      //
-      //   var address = '';
-      //   if (place.address_components) {
-      //     address = [
-      //       (place.address_components[0] && place.address_components[0].short_name || ''),
-      //       (place.address_components[1] && place.address_components[1].short_name || ''),
-      //       (place.address_components[2] && place.address_components[2].short_name || '')
-      //     ].join(' ');
-      //   }
-      //
-      //
-      //
-      //   infowindowContent.children['place-icon'].src = place.icon;
-      //   infowindowContent.children['place-name'].textContent = place.name;
-      //   infowindowContent.children['place-address'].textContent = address;
-      //   infowindow.open(map, marker);
-      // });
-      //
-      // // Instantiates markers
-      // var infowindow = new google.maps.InfoWindow();
-      // var infowindowContent = document.getElementById('infowindow-content');
-      // infowindow.setContent(infowindowContent);
-      // var marker = new google.maps.Marker({
-      //   map: map,
-      //   anchorPoint: new google.maps.Point(0, -29)
-      // });
-      // var marker2 = new google.maps.Marker({
-      //   position: uluru1,
-      //   map: map
-      // });
+      var searchBox = new google.maps.places.SearchBox(pickup);
+      var searchBox2 = new google.maps.places.SearchBox(dropoff);
 
 
+      map.addListener('bounds_changed', function () {
+        searchBox.setBounds(map.getBounds());
+        searchBox2.setBounds(map.getBounds());
+      });
+
+
+      var markers = [];
+
+      searchBox2.addListener('places_changed', function () {
+        var places = searchBox2.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+        markers = [];
+
+        var bounds = new google.maps.LatLngBounds();
+
+        places.forEach(function (place) {
+          if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
+          var icon = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+          };
+
+          // markers.push(new google.maps.Marker({
+          //   map: map,
+          //   icon: icon,
+          //   title: place.name,
+          //   position: place.geometry.location
+          // }));
+
+          if (place.geometry.viewport) {
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+
+
+
+        });
+        map.fitBounds(bounds);
+      });
+
+      searchBox.addListener('places_changed', function () {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+        markers.forEach(function (marker) {
+          marker.setMap(null);
+        });
+        markers = [];
+
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function (place) {
+          if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
+          var icon = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+          };
+
+          // markers.push(new google.maps.Marker({
+          //   map: map,
+          //   icon: icon,
+          //   title: place.name,
+          //   position: place.geometry.location
+          // }));
+
+          if (place.geometry.viewport) {
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+
+
+
+        });
+
+        map.fitBounds(bounds);
+
+      });
+
+      var onChangeHandler = function() {
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+      };
+      document.getElementById('pickup').addEventListener('change', onChangeHandler);
+      document.getElementById('dropoff').addEventListener('change', onChangeHandler);
 
     }
     setTimeout(function(){
       initMap();
     }, 2000);
+
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      directionsService.route({
+        origin: document.getElementById('pickup').value,
+        destination: document.getElementById('dropoff').value,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+          var price = response.routes[0].legs[0].distance.value / 1000;
+          document.getElementById('price').innerHTML = '$' + price.toFixed(0);
+          $scope.test = 'test';
+        }
+      });
+
+    }
 
 
   });

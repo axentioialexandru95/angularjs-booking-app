@@ -81,3 +81,8 @@ body {
     border-bottom: 0;
   }
 }
+
+#position-fix-addon{
+  position: relative;
+  left: 15px;
+}
