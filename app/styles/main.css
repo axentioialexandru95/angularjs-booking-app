@@ -86,3 +86,9 @@ body {
   position: relative;
   left: 15px;
 }
+
+input.ng-invalid, select.ng-invalid {
+  border: 1px solid mediumvioletred;
+}
+
+

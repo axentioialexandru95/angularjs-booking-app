@@ -8,12 +8,20 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function () {
+  .controller('MainCtrl', function ($scope) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
+
+    $scope.passenger = {
+      number: '1'
+    };
+
+    $scope.updatePrefixPhone = function () {
+      $scope.passenger.phonenumber = $scope.passenger.prefix;
+    };
 
     function initMap() {
 
@@ -87,12 +95,7 @@ angular.module('angularApp')
             scaledSize: new google.maps.Size(25, 25)
           };
 
-          // markers.push(new google.maps.Marker({
-          //   map: map,
-          //   icon: icon,
-          //   title: place.name,
-          //   position: place.geometry.location
-          // }));
+
 
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
@@ -132,12 +135,6 @@ angular.module('angularApp')
             scaledSize: new google.maps.Size(25, 25)
           };
 
-          // markers.push(new google.maps.Marker({
-          //   map: map,
-          //   icon: icon,
-          //   title: place.name,
-          //   position: place.geometry.location
-          // }));
 
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
@@ -162,7 +159,7 @@ angular.module('angularApp')
     }
     setTimeout(function(){
       initMap();
-    }, 2000);
+    }, 1000);
 
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       directionsService.route({
@@ -173,12 +170,14 @@ angular.module('angularApp')
         if (status === google.maps.DirectionsStatus.OK) {
           directionsDisplay.setDirections(response);
           var price = response.routes[0].legs[0].distance.value / 1000;
-          document.getElementById('price').innerHTML = '$' + price.toFixed(0);
+          document.getElementById('price').innerHTML = 'Price: ' + price.toFixed(0) + '$';
+          document.getElementById('distance').innerHTML = 'Distance:' + price.toFixed(0);
           $scope.test = 'test';
         }
       });
 
     }
+
 
 
   });

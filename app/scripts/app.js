@@ -20,6 +20,7 @@ angular
     'ngIntlTelInput'
   ])
   .config(function ($routeProvider, $locationProvider, ngIntlTelInputProvider) {
+    $locationProvider.hashPrefix('/')
     ngIntlTelInputProvider.set({initialCountry: 'us'});
     $routeProvider
       .when('/', {

@@ -147,4 +147,6 @@ angular.module('angularApp')
 
     $scope.minutes = minutes;
 
+
+
   }]);
