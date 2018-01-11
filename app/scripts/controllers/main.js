@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', function ($scope, $sce) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -20,6 +20,9 @@ angular.module('angularApp')
       vehicle: 'Saloon',
       payment: 'Paypal/Credit'
     };
+
+    // $scope.viaForm = '<div>'
+
 
     $scope.initialPrice = [];
 
@@ -52,7 +55,32 @@ angular.module('angularApp')
     }
 
 
+    $scope.viaTemplate = $sce.trustAsHtml('<br>\n' +
+      '      <div class="row">\n' +
+      '        <div class="input-group">\n' +
+      '          <div class="input-group-addon">\n' +
+      '            <span class="fa fa-bullseye"></span>\n' +
+      '          </div>\n' +
+      '          <input type="text" id="viaInput" class="form-control" placeholder="Stop on the way" ng-required="true" required ng-model="viaAddress" name="viaAddress" style="width: calc(100% + 1px)">\n' +
+      '          <div class="input-group-addon" style="background-color: #0e90d2; color: white; cursor: pointer">\n' +
+      '            <span class="glyphicon glyphicon-remove"></span>\n' +
+      '          </div>\n' +
+      '          <div class="input-group-addon" ng-click="removeTemplate();" style="cursor: pointer;">\n' +
+      '            <span class="glyphicon glyphicon-trash"></span>\n' +
+      '          </div>\n' +
+      '        </div>\n' +
+      '        <textarea style="margin-top: 5px" name="" id="" cols="30" rows="1" class="form-control" placeholder="Details (e.g. House/Flat no, Building name, etc)"></textarea>\n' +
+      '      </div>');
 
+    var compile = document.createElement("compile")
+    $scope.addTemplate = function () {
+      document.getElementById('addedVia').innerHTML = $scope.viaTemplate;
+    };
+
+
+    $scope.removeTemplate = function () {
+      document.getElementById('addedVia').innerHTML = '';
+    };
 
 
 
@@ -113,31 +141,46 @@ angular.module('angularApp')
       ];
 
 
-    $scope.sLuggage = 2;
-    $scope.bLuggage = 2;
-    $scope.passengerPlaces = 4;
+
+    // $scope.changeLuggage = function () {
+    //   if($scope.passenger.vehicle == 'Saloon'){
+    //     $scope.sLuggage = 2;
+    //     $scope.bLuggage = 2;
+    //     $scope.passengerPlaces= 2;
+    //   };
+    //   if($scope.passenger.vehicle == 'MPV'){
+    //     $scope.sLuggage = 5;
+    //     $scope.bLuggage = 4;
+    //     $scope.passengerPlaces= 5;
+    //   };
+    //   if($scope.passenger.vehicle == '8-Seater'){
+    //     $scope.sLuggage = 8;
+    //     $scope.bLuggage = 8;
+    //     $scope.passengerPlaces= 8;
+    //   };
+    // }
 
 
     $scope.changeCarType = function () {
-      if($scope.passenger.number < 5){
+      if($scope.passenger.number < 5 && $scope.passenger.number > 0){
         $scope.passenger.vehicle = 'Saloon';
-        if ($scope.vehicles.length === 2){
+        if ($scope.vehicles.length == 2){
           $scope.vehicles.unshift({"Name": "Saloon"});
         }
       }
-      if($scope.passenger.number === 5){
+      if($scope.passenger.number == 5){
         $scope.passenger.vehicle = 'MPV';
-        if ($scope.vehicles.length === 3){
+        if ($scope.vehicles.length == 3){
           $scope.vehicles.splice(0,1);
         }
-        if ($scope.vehicles.length === 1){
+        if ($scope.vehicles.length == 1){
           $scope.vehicles.unshift({"Name": "MPV"});
         }
 
       }
-      if($scope.passenger.number === 8 ){
+      if($scope.passenger.number == 8 ){
         $scope.passenger.vehicle = '8-Seater';
-        if ($scope.vehicles.length === 2){
+        if ($scope.vehicles.length == 2){
           $scope.vehicles.splice(0,1);
         }
 
@@ -300,5 +343,8 @@ angular.module('angularApp')
 
     setTimeout(function(){
       initMap();
-    }, 1000);
+    }, 1000)
+
+
   });
+
