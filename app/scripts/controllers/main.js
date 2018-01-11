@@ -16,12 +16,135 @@ angular.module('angularApp')
     ];
 
     $scope.passenger = {
-      number: '1'
+      number: '1',
+      vehicle: 'Saloon',
+      payment: 'Paypal/Credit'
     };
 
-    $scope.updatePrefixPhone = function () {
-      $scope.passenger.phonenumber = $scope.passenger.prefix;
+    $scope.initialPrice = [];
+
+
+    $scope.changedPayment = function () {
+      var price = document.getElementById('price').innerHTML;
+      var parsedprice = parseInt(price);
+      $scope.changedPrice = $scope.initialPrice.push(parsedprice);
+      var addednewprice = parsedprice + 20;
+      if ($scope.passenger.payment === 'Cash'){
+        document.getElementById('price').innerHTML = addednewprice;
+      } else if ($scope.passenger.payment !== 'Cash'){
+        document.getElementById('price').innerHTML = $scope.initialPrice[0];
+      }
     };
+
+    if($scope.price !== ''){
+      $scope.addDriverTips = function () {
+        var price = document.getElementById('price').innerHTML;
+        var tips = document.getElementById('tips').value;
+        var parsedprice = parseInt(price);
+        $scope.changedPrice = $scope.initialPrice.push(parsedprice);
+        var parsedtips = parseInt(tips);
+        var newprice = parsedprice + parsedtips;
+        document.getElementById('price').innerHTML = newprice;
+        if (tips === 0){
+          document.getElementById('price').innerHTML = $scope.initialPrice[0];
+        }
+      };
+    }
+
+
+
+
+
+
+    $scope.payments = [
+      {
+        "name": "Paypal/Credit"
+      },
+      {
+        "name": "Credit/Debit"
+      },
+      {
+        "name": "Cash"
+      },
+      {
+        "name": "Bank Transfer"
+      }
+    ]
+
+    $scope.passengers =
+      [
+        {
+          number: 1
+        },
+        {
+          number: 2
+        },
+        {
+          number: 3
+        },
+        {
+          number: 4
+        },
+        {
+          number: 5
+        },
+        {
+          number: 6
+        },
+        {
+          number: 7
+        },
+        {
+          number: 8
+        }
+      ];
+
+    $scope.vehicles =
+      [
+        {
+          "Name": "Saloon"
+        },
+        {
+          "Name": "MPV"
+        },
+        {
+          "Name": "8-Seater"
+        }
+      ];
+
+
+    $scope.sLuggage = 2;
+    $scope.bLuggage = 2;
+    $scope.passengerPlaces = 4;
+
+
+    $scope.changeCarType = function () {
+      if($scope.passenger.number < 5){
+        $scope.passenger.vehicle = 'Saloon';
+        if ($scope.vehicles.length === 2){
+          $scope.vehicles.unshift({"Name": "Saloon"});
+        }
+      }
+      if($scope.passenger.number === 5){
+        $scope.passenger.vehicle = 'MPV';
+        if ($scope.vehicles.length === 3){
+          $scope.vehicles.splice(0,1);
+        }
+        if ($scope.vehicles.length === 1){
+          $scope.vehicles.unshift({"Name": "MPV"});
+        }
+
+      }
+      if($scope.passenger.number === 8 ){
+        $scope.passenger.vehicle = '8-Seater';
+        if ($scope.vehicles.length === 2){
+          $scope.vehicles.splice(0,1);
+        }
+
+      }
+    };
+
+
 
     function initMap() {
 
@@ -33,7 +156,6 @@ angular.module('angularApp')
 
       // Instantiate two locations
       var iasi = {lat: 47.156116, lng: 27.5169311};
-      var iasi2 = {lat: 49.156116, lng: 29.5169311};
 
       // Instantiates the Gmaps Map
       var map = new google.maps.Map(document.getElementById('map'), {
@@ -151,33 +273,32 @@ angular.module('angularApp')
       });
 
       var onChangeHandler = function() {
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
+        $scope.calculateAndDisplayRoute(directionsService, directionsDisplay);
       };
       document.getElementById('pickup').addEventListener('change', onChangeHandler);
       document.getElementById('dropoff').addEventListener('change', onChangeHandler);
 
     }
-    setTimeout(function(){
-      initMap();
-    }, 1000);
 
-    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
       directionsService.route({
         origin: document.getElementById('pickup').value,
         destination: document.getElementById('dropoff').value,
         travelMode: google.maps.TravelMode.DRIVING
       }, function(response, status) {
         if (status === google.maps.DirectionsStatus.OK) {
+
           directionsDisplay.setDirections(response);
+
           var price = response.routes[0].legs[0].distance.value / 1000;
-          document.getElementById('price').innerHTML = 'Price: ' + price.toFixed(0) + '$';
-          document.getElementById('distance').innerHTML = 'Distance:' + price.toFixed(0);
-          $scope.test = 'test';
+          document.getElementById('price').innerHTML=  ~~price;
+          document.getElementById('distance').innerHTML=  ~~price;
+
         }
       });
+    };
 
-    }
-
-
-
+    setTimeout(function(){
+      initMap();
+    }, 1000);
   });

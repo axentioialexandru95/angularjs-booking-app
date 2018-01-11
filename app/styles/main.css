@@ -91,4 +91,7 @@ input.ng-invalid, select.ng-invalid {
   border: 1px solid mediumvioletred;
 }
 
+.blue{
+  color: #1565C0;
+}
 

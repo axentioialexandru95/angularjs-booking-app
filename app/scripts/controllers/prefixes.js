@@ -15,7 +15,7 @@ angular.module('angularApp')
       'Karma'
     ];
     $scope.passenger = {
-      prefix:  ''
+      prefix:  '',
     };
 
     $http.get('/data/prefixes.json')
@@ -30,6 +30,11 @@ angular.module('angularApp')
         function (response) {
           console.dir("GET METHOD DIDN'T WORK" + response);
         });
+
+    $scope.updatePrefixPhone = function () {
+      $scope.passenger.phonenumber = $scope.passenger.prefix;
+    };
+
 
   }]);
 
