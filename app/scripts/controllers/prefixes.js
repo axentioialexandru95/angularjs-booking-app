@@ -15,7 +15,7 @@ angular.module('angularApp')
       'Karma'
     ];
     $scope.passenger = {
-      prefix:  'Country Prefix',
+      prefix:  'Ro'
     };
 
     // TODO try to get the prefix to get written inside the value of Phone Number input

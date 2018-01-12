@@ -29,3 +29,43 @@ Notes:
 - from booking form ignore *small luggage, large luggage, return)
 - etc de considerat optiuni de +VIA, switch pickup & dropoff, clear/delete pickup/dropoff
 
+
+------------------------------ Array
+if tips != 0
+vehicle == mpv && 8-Seater
+payment == Credit/Debit && Cash && Bank Transfer
+tips != 0
+
+finalPrice = vehicle + payment + tips + price
+arr[]
+vehicle.push
+
+finalPrice = [];
+finalPrice.push(vehicle.price);
+=>
+finalPrice = [5] if MPV
+finalPrice = [10] if 8-Seater
+
+finalPrice.push(payment.price);
+finalPrice = [5,20]
+for(i = 0; i < finalPrice.length; i++){
+  finalPrice = i;
+}
+
+------------------------------ Object
+Tips != 0;
+finalPrice = {};
+finalPrice
+
+
+priceCalculator = [{name: cars, value: 10}, {name: payment, price: 10}, {name: tips, price: 10}]
+var finalPrice = function(){
+  for(var i = 0; i < priceCalculator.length){
+     console.dir(priceCalculator[i].value);
+     priceCalculator[i]++;
+    }
+  }
+}
+finalPrice();
+
+

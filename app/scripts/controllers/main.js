@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($scope, $sce) {
+  .controller('MainCtrl', function ($scope, $sce, $compile) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -24,9 +24,14 @@ angular.module('angularApp')
 
 
     $scope.initialPrice = [];
+    $scope.finalPrice = [];
+
 
 
     $scope.changedPayment = function () {
+      if($scope.price === undefined){
+        $scope.price = 0;
+      }
       console.dir($scope.initialPrice[0]);
       if ($scope.passenger.payment === 'Paypal/Credit'){
         $scope.paymentMethod = 0;
@@ -40,54 +45,84 @@ angular.module('angularApp')
       if ($scope.passenger.payment === 'Bank Transfer'){
         $scope.paymentMethod = 30;
       }
+
+
       $scope.price = $scope.paymentMethod + $scope.initialPrice[0];
+
+
     };
 
-    //TODO Make the driver tip work when clicking outside of it
+    //TODO make the switchplaces function to react when the values are changed
+    $scope.switchPlaces = function () {
+      var pickup = document.getElementById('pickup').value;
+      $scope.pickup = pickup;
+      var dropoff = document.getElementById('dropoff').value;
+      $scope.dropoff = dropoff;
+      var tmp = $scope.pickup;
+
+      $scope.pickup = $scope.dropoff;
+      $scope.dropoff = tmp;
+    };
+
     $scope.tips = document.getElementById('tips').value;
 
-    $scope.addDriverTips = function (e) {
-      if (e.target != document.getElementById('tips')){
-        console.dir($scope.tips);
+    $scope.addDriverTips = function () {
+      $scope.price = parseInt($scope.initialPrice[0]) + parseInt($scope.tips);
+      if($scope.tips === ''){
+        $scope.price = $scope.initialPrice[0];
       }
     };
 
-    $scope.addDriverTips($scope.tips);
 
-    if ($scope.tips !== '')
-    {
-      console.dir('hello there');
+    $scope.changeCarType = function () {
+      if($scope.passenger.number < 5){
+        $scope.passenger.vehicle = 'Saloon';
+        if ($scope.vehicles.length == 2){
+          $scope.vehicles.unshift({"Name": "Saloon"});
+        }
+        if($scope.vehicles.length == 1){
+          $scope.vehicles.unshift({"Name": "MPV"});
+          $scope.vehicles.unshift({"Name": "Saloon"});
+        }
+      }
+      if($scope.passenger.number == 5 || $scope.passenger.number > 5){
+        $scope.passenger.vehicle = 'MPV';
+        if ($scope.vehicles.length == 3){
+          $scope.vehicles.splice(0,1);
+        }
+        if ($scope.vehicles.length == 1){
+          $scope.vehicles.unshift({"Name": "MPV"});
+        }
+
+      }
+      if($scope.passenger.number == 8 ){
+        $scope.passenger.vehicle = '8-Seater';
+        if ($scope.vehicles.length == 2){
+          $scope.vehicles.splice(0,1);
+        }
+
+      }
     };
 
-
-
-
-    // TODO - make a directive with the following code and make it add on click
-    $scope.viaTemplate = $sce.trustAsHtml('<br>\n' +
-      '      <div class="row">\n' +
-      '        <div class="input-group">\n' +
-      '          <div class="input-group-addon">\n' +
-      '            <span class="fa fa-bullseye"></span>\n' +
-      '          </div>\n' +
-      '          <input type="text" id="viaInput" class="form-control" placeholder="Stop on the way" ng-required="true" required ng-model="viaAddress" name="viaAddress" style="width: calc(100% + 1px)">\n' +
-      '          <div class="input-group-addon" style="background-color: #0e90d2; color: white; cursor: pointer">\n' +
-      '            <span class="glyphicon glyphicon-remove"></span>\n' +
-      '          </div>\n' +
-      '          <div class="input-group-addon" ng-click="removeTemplate();" style="cursor: pointer;">\n' +
-      '            <span class="glyphicon glyphicon-trash"></span>\n' +
-      '          </div>\n' +
-      '        </div>\n' +
-      '        <textarea style="margin-top: 5px" name="" id="" cols="30" rows="1" class="form-control" placeholder="Details (e.g. House/Flat no, Building name, etc)"></textarea>\n' +
-      '      </div>');
-
-    var compile = document.createElement("compile")
+    var i = 1;
     $scope.addTemplate = function () {
-      document.getElementById('addedVia').innerHTML = $scope.viaTemplate;
+      // var placedVia = angular.element(document.querySelector('#viaInputPlace'));
+      // var appendVia = $compile('<add-via-input></add-via-input>')($scope);
+      // placedVia.append(appendVia);
+      $scope.Via.push(i);
+      i++;
+    };
+    $scope.Via = [];
+
+    $scope.removeTemplate = function (p)
+    {
+      $scope.Via.splice($scope.Via.indexOf(p),1);
+      console.dir(p);
+      // var placedVia = angular.element(document.querySelector('#viaInputPlace'));
+      // placedVia.children().remove();
     };
 
-    $scope.removeTemplate = function () {
-      document.getElementById('addedVia').innerHTML = '';
-    };
+    $scope.showVia = false;
     $scope.payments = [
       {
         "name": "Paypal/Credit"
@@ -161,41 +196,22 @@ angular.module('angularApp')
     //   };
     // }
 
-    // TODO fix the code, it doesn't function properly on the select tag
-    $scope.changeCarType = function () {
-      if($scope.passenger.number < 5){
-        $scope.passenger.vehicle = 'Saloon';
-        if ($scope.vehicles.length == 2){
-          $scope.vehicles.unshift({"Name": "Saloon"});
-        }
-        if($scope.vehicles.length == 1){
-          $scope.vehicles.unshift({"Name": "MPV"});
-          $scope.vehicles.unshift({"Name": "Saloon"});
-        }
-      }
-      if($scope.passenger.number == 5 || $scope.passenger.number > 5){
-        $scope.passenger.vehicle = 'MPV';
-        $scope.price = $scope.initialPrice[0] + 10;
-        if ($scope.vehicles.length == 3){
-          $scope.vehicles.splice(0,1);
-        }
-        if ($scope.vehicles.length == 1){
-          $scope.vehicles.unshift({"Name": "MPV"});
-        }
 
-      }
-      if($scope.passenger.number == 8 ){
-        $scope.passenger.vehicle = '8-Seater';
-        $scope.price = $scope.initialPrice[0] + 20;
-        if ($scope.vehicles.length == 2){
-          $scope.vehicles.splice(0,1);
-        }
 
+    $scope.changeVehiclePrice = function () {
+      if($scope.passenger.vehicle == 'Saloon' || $scope.passenger.number < 5){
+        $scope.vehiclePrice = 0;
       }
+      if($scope.passenger.vehicle == 'MPV' || ($scope.passenger.number >= 5 && $scope.passenger.number < 8)){
+        $scope.vehiclePrice = 5;
+      }
+      if($scope.passenger.vehicle == '8-Seater' || $scope.passenger.number == 8){
+        $scope.vehiclePrice = 10;
+      }
+      $scope.price = $scope.vehiclePrice + $scope.initialPrice[0];
     };
 
     // TODO add via for directions on every via instance
-
     function initMap() {
 
       // Instantiate a directions service.
@@ -248,6 +264,10 @@ angular.module('angularApp')
           return;
         }
 
+        // TODO: add logic to add every parameter until the final price is done
+
+
+
         markers = [];
 
         var bounds = new google.maps.LatLngBounds();
@@ -272,7 +292,6 @@ angular.module('angularApp')
         });
         map.fitBounds(bounds);
       });
-
       searchBox.addListener('places_changed', function () {
         var places = searchBox.getPlaces();
 
@@ -314,17 +333,21 @@ angular.module('angularApp')
       document.getElementById('pickup').addEventListener('change', onChangeHandler);
       document.getElementById('dropoff').addEventListener('change', onChangeHandler);
     }
+    $scope.waypts = [47.1565195, 27.6120205];
 
     $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
+      var first = new google.maps.LatLng(47.094394, 25.963092);
       directionsService.route({
         origin: document.getElementById('pickup').value,
         destination: document.getElementById('dropoff').value,
+        // waypoints: [{location: first, stopover: true}],
+        // optimizeWaypoints: true,
         travelMode: google.maps.TravelMode.DRIVING
       }, function(response, status) {
         if (status === google.maps.DirectionsStatus.OK) {
 
           directionsDisplay.setDirections(response);
-
+          $scope.route = response.routes[0];
           var price = response.routes[0].legs[0].distance.value / 1000;
           $scope.price = ~~price;
           $scope.distance = ~~price;
