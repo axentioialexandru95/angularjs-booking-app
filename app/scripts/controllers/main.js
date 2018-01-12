@@ -21,7 +21,7 @@ angular.module('angularApp')
       payment: 'Paypal/Credit'
     };
 
-    // $scope.viaForm = '<div>'
+
 
 
     $scope.initialPrice = [];
@@ -55,6 +55,7 @@ angular.module('angularApp')
     }
 
 
+    // TODO - make a directive with the following code and make it add on click
     $scope.viaTemplate = $sce.trustAsHtml('<br>\n' +
       '      <div class="row">\n' +
       '        <div class="input-group">\n' +
@@ -141,7 +142,7 @@ angular.module('angularApp')
       ];
 
 
-
+    // TODO make the luggage implementation via vehicle changes
     // $scope.changeLuggage = function () {
     //   if($scope.passenger.vehicle == 'Saloon'){
     //     $scope.sLuggage = 2;
@@ -161,6 +162,7 @@ angular.module('angularApp')
     // }
 
 
+    // TODO fix the code, it doesn't function properly on the select tag
     $scope.changeCarType = function () {
       if($scope.passenger.number < 5 && $scope.passenger.number > 0){
         $scope.passenger.vehicle = 'Saloon';
@@ -188,6 +190,7 @@ angular.module('angularApp')
     };
 
 
+    // TODO add via for directions on every via instance
 
     function initMap() {
 
@@ -323,6 +326,7 @@ angular.module('angularApp')
 
     }
 
+    // TODO: Implement the singleton pattern for the initial price instance.
     $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
       directionsService.route({
         origin: document.getElementById('pickup').value,
@@ -336,14 +340,43 @@ angular.module('angularApp')
           var price = response.routes[0].legs[0].distance.value / 1000;
           document.getElementById('price').innerHTML=  ~~price;
           document.getElementById('distance').innerHTML=  ~~price;
-
+          return {
+            returningPrice: price
+          };
         }
-      });
+
+        });
     };
+
+    $scope.Singleton = (function () {
+      $scope.instance;
+
+      function createInstance() {
+        var object = new Object("I am the instance");
+        return object;
+      }
+      return {
+        getInstance: function () {
+          if(!$scope.instance){
+            $scope.instance = createInstance();
+          }
+          return $scope.instance;
+        }
+      };
+
+    })();
+
+    $scope.run = function() {
+      var instance1 = $scope.Singleton.getInstance();
+      var instance2 = $scope.Singleton.getInstance();
+
+      console.dir("Same instance? " + (instance1 === instance2));
+    };
+    $scope.run();
 
     setTimeout(function(){
       initMap();
-    }, 1000)
+    }, 1000);
 
 
   });

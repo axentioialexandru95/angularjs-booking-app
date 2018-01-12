@@ -85,6 +85,7 @@
         <div class="vehicle-title">
           <i class="fa fa-car"></i> <b>Vehicle:</b>  <i class="fa fa-briefcase blue"></i>x{{sLuggage}} <i class="fa fa-suitcase blue"></i>x{{bLuggage}} <i class="fa fa-users blue"></i>x{{passengerPlaces}}
         </div>
+        <!--TODO add an action that will change the value of the price if the car is middle to big car-->
       <select name="passengers.vehicle" class="form-control"  ng-change="changeCarType()" ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
         <option value="{{vehicle.Name}}" ng-repeat="vehicle in vehicles">{{vehicle.Name}}</option>
       </select>
@@ -99,6 +100,7 @@
         <br>
       </div>
       <div class="row">
+        <!--TODO add the driver tip only after it was clicked outside of the input, the return value should be the initial value if other calculations weren't made-->
         <i class="fa fa-money"></i> <b>Driver tip:</b>
         <input type="number" placeholder="0" ng-model="tips" class="form-control "  id="tips" ng-change="addDriverTips()">
         <br>
@@ -120,6 +122,7 @@
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-envelope"></span>
         </div>
+        <!--TODO add e-mail validation-->
         <input type="email" class="form-control" name="email" ng-model="data.email" required minlength="5" required maxlength="100" email-address-valability-validator placeholder="Passenger email">
       </div>
       <br>

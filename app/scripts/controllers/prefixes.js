@@ -18,6 +18,8 @@ angular.module('angularApp')
       prefix:  'Country Prefix',
     };
 
+    // TODO try to get the prefix to get written inside the value of Phone Number input
+
     // $http.get('/data/prefixes.json')
     //   .then(
     //     function (response) {
