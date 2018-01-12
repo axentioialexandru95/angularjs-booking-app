@@ -23,36 +23,43 @@ angular.module('angularApp')
 
 
 
-
     $scope.initialPrice = [];
 
 
     $scope.changedPayment = function () {
-      var price = document.getElementById('price').innerHTML;
-      var parsedprice = parseInt(price);
-      $scope.changedPrice = $scope.initialPrice.push(parsedprice);
-      var addednewprice = parsedprice + 20;
+      console.dir($scope.initialPrice[0]);
+      if ($scope.passenger.payment === 'Paypal/Credit'){
+        $scope.paymentMethod = 0;
+      }
       if ($scope.passenger.payment === 'Cash'){
-        document.getElementById('price').innerHTML = addednewprice;
-      } else if ($scope.passenger.payment !== 'Cash'){
-        document.getElementById('price').innerHTML = $scope.initialPrice[0];
+        $scope.paymentMethod = 20;
+      }
+      if ($scope.passenger.payment === 'Credit/Debit'){
+        $scope.paymentMethod = 10;
+      }
+      if ($scope.passenger.payment === 'Bank Transfer'){
+        $scope.paymentMethod = 30;
+      }
+      $scope.price = $scope.paymentMethod + $scope.initialPrice[0];
+    };
+
+    //TODO Make the driver tip work when clicking outside of it
+    $scope.tips = document.getElementById('tips').value;
+
+    $scope.addDriverTips = function (e) {
+      if (e.target != document.getElementById('tips')){
+        console.dir($scope.tips);
       }
     };
 
-    if($scope.price !== ''){
-      $scope.addDriverTips = function () {
-        var price = document.getElementById('price').innerHTML;
-        var tips = document.getElementById('tips').value;
-        var parsedprice = parseInt(price);
-        $scope.changedPrice = $scope.initialPrice.push(parsedprice);
-        var parsedtips = parseInt(tips);
-        var newprice = parsedprice + parsedtips;
-        document.getElementById('price').innerHTML = newprice;
-        if (tips === 0){
-          document.getElementById('price').innerHTML = $scope.initialPrice[0];
-        }
-      };
-    }
+    $scope.addDriverTips($scope.tips);
+
+    if ($scope.tips !== '')
+    {
+      console.dir('hello there');
+    };
+
+
 
 
     // TODO - make a directive with the following code and make it add on click
@@ -78,13 +85,9 @@ angular.module('angularApp')
       document.getElementById('addedVia').innerHTML = $scope.viaTemplate;
     };
 
-
     $scope.removeTemplate = function () {
       document.getElementById('addedVia').innerHTML = '';
     };
-
-
-
     $scope.payments = [
       {
         "name": "Paypal/Credit"
@@ -98,8 +101,7 @@ angular.module('angularApp')
       {
         "name": "Bank Transfer"
       }
-    ]
-
+    ];
     $scope.passengers =
       [
         {
@@ -127,7 +129,6 @@ angular.module('angularApp')
           number: 8
         }
       ];
-
     $scope.vehicles =
       [
         {
@@ -140,7 +141,6 @@ angular.module('angularApp')
           "Name": "8-Seater"
         }
       ];
-
 
     // TODO make the luggage implementation via vehicle changes
     // $scope.changeLuggage = function () {
@@ -161,17 +161,21 @@ angular.module('angularApp')
     //   };
     // }
 
-
     // TODO fix the code, it doesn't function properly on the select tag
     $scope.changeCarType = function () {
-      if($scope.passenger.number < 5 && $scope.passenger.number > 0){
+      if($scope.passenger.number < 5){
         $scope.passenger.vehicle = 'Saloon';
         if ($scope.vehicles.length == 2){
           $scope.vehicles.unshift({"Name": "Saloon"});
         }
+        if($scope.vehicles.length == 1){
+          $scope.vehicles.unshift({"Name": "MPV"});
+          $scope.vehicles.unshift({"Name": "Saloon"});
+        }
       }
-      if($scope.passenger.number == 5){
+      if($scope.passenger.number == 5 || $scope.passenger.number > 5){
         $scope.passenger.vehicle = 'MPV';
+        $scope.price = $scope.initialPrice[0] + 10;
         if ($scope.vehicles.length == 3){
           $scope.vehicles.splice(0,1);
         }
@@ -182,13 +186,13 @@ angular.module('angularApp')
       }
       if($scope.passenger.number == 8 ){
         $scope.passenger.vehicle = '8-Seater';
+        $scope.price = $scope.initialPrice[0] + 20;
         if ($scope.vehicles.length == 2){
           $scope.vehicles.splice(0,1);
         }
 
       }
     };
-
 
     // TODO add via for directions on every via instance
 
@@ -198,8 +202,6 @@ angular.module('angularApp')
       var directionsDisplay;
       var directionsService = new google.maps.DirectionsService();
       directionsDisplay = new google.maps.DirectionsRenderer();
-
-
       // Instantiate two locations
       var iasi = {lat: 47.156116, lng: 27.5169311};
 
@@ -262,17 +264,11 @@ angular.module('angularApp')
             anchor: new google.maps.Point(17, 34),
             scaledSize: new google.maps.Size(25, 25)
           };
-
-
-
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
           } else {
             bounds.extend(place.geometry.location);
           }
-
-
-
         });
         map.fitBounds(bounds);
       });
@@ -283,7 +279,6 @@ angular.module('angularApp')
         if (places.length == 0) {
           return;
         }
-
         markers.forEach(function (marker) {
           marker.setMap(null);
         });
@@ -302,16 +297,11 @@ angular.module('angularApp')
             anchor: new google.maps.Point(17, 34),
             scaledSize: new google.maps.Size(25, 25)
           };
-
-
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
           } else {
             bounds.extend(place.geometry.location);
           }
-
-
-
         });
 
         map.fitBounds(bounds);
@@ -323,10 +313,8 @@ angular.module('angularApp')
       };
       document.getElementById('pickup').addEventListener('change', onChangeHandler);
       document.getElementById('dropoff').addEventListener('change', onChangeHandler);
-
     }
 
-    // TODO: Implement the singleton pattern for the initial price instance.
     $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
       directionsService.route({
         origin: document.getElementById('pickup').value,
@@ -338,41 +326,16 @@ angular.module('angularApp')
           directionsDisplay.setDirections(response);
 
           var price = response.routes[0].legs[0].distance.value / 1000;
-          document.getElementById('price').innerHTML=  ~~price;
-          document.getElementById('distance').innerHTML=  ~~price;
-          return {
-            returningPrice: price
-          };
+          $scope.price = ~~price;
+          $scope.distance = ~~price;
+          $scope.initialPrice.push($scope.price);
+          if ($scope.price !== $scope.initialPrice[0]){
+            $scope.initialPrice.unshift($scope.price);
+          }
         }
-
         });
     };
 
-    $scope.Singleton = (function () {
-      $scope.instance;
-
-      function createInstance() {
-        var object = new Object("I am the instance");
-        return object;
-      }
-      return {
-        getInstance: function () {
-          if(!$scope.instance){
-            $scope.instance = createInstance();
-          }
-          return $scope.instance;
-        }
-      };
-
-    })();
-
-    $scope.run = function() {
-      var instance1 = $scope.Singleton.getInstance();
-      var instance2 = $scope.Singleton.getInstance();
-
-      console.dir("Same instance? " + (instance1 === instance2));
-    };
-    $scope.run();
 
     setTimeout(function(){
       initMap();

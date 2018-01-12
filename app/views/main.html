@@ -86,15 +86,15 @@
           <i class="fa fa-car"></i> <b>Vehicle:</b>  <i class="fa fa-briefcase blue"></i>x{{sLuggage}} <i class="fa fa-suitcase blue"></i>x{{bLuggage}} <i class="fa fa-users blue"></i>x{{passengerPlaces}}
         </div>
         <!--TODO add an action that will change the value of the price if the car is middle to big car-->
-      <select name="passengers.vehicle" class="form-control"  ng-change="changeCarType()" ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
+      <select name="passengers.vehicle" class="form-control"   ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
         <option value="{{vehicle.Name}}" ng-repeat="vehicle in vehicles">{{vehicle.Name}}</option>
       </select>
         <br>
       </div>
       <div class="row">
         <i class="fa fa-info-circle"></i> <b>Payment method:</b>
-
-        <select name="passenger.payment" class="form-control" ng-change="changedPayment()" ng-disabled="passengerForm.$invalid"  ng-model="passenger.payment" id="paymentMethods">
+<!--ng-disabled="passengerForm.$invalid"-->
+        <select name="passenger.payment" class="form-control" ng-change="changedPayment()"   ng-model="passenger.payment" id="paymentMethods">
           <option value="{{payment.name}}" ng-repeat="payment in payments">{{payment.name}}</option>
         </select>
         <br>
@@ -102,12 +102,11 @@
       <div class="row">
         <!--TODO add the driver tip only after it was clicked outside of the input, the return value should be the initial value if other calculations weren't made-->
         <i class="fa fa-money"></i> <b>Driver tip:</b>
-        <input type="number" placeholder="0" ng-model="tips" class="form-control "  id="tips" ng-change="addDriverTips()">
+         <input type="text" placeholder="0" ng-model="tips" class="form-control "  id="tips">
         <br>
       </div>
       <br>
     </div>
-
     <div class="col-sm-6">
       <div id="map" style="height: 400px"></div>
       <br>
@@ -146,8 +145,9 @@
       <br>
       <input type="text" placeholder="Redeem voucher" class="form-control">
       <hr>
-      <h4>Distance: <span id="distance"></span>km</h4>
-      <h4>Price: $<span id="price"></span></h4>
+      <h4>Distance: <span>{{distance}}</span> km</h4>
+      <!--<h4>Price: $<span id="price"></span></h4>-->
+      <h4>Price: $<span >{{price}}</span></h4>
 
     </div>
     <button type="submit" value="submit" class="form-control btn btn-default" ng-disabled="passengerForm.$invalid"><i class="fa fa-floppy-o"></i> Confirm Booking</button>
