@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($scope, $sce, $compile) {
+  .controller('MainCtrl', function ($scope, $sce, $compile, $http) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -21,18 +21,18 @@ angular.module('angularApp')
       payment: 'Paypal/Credit'
     };
 
-
-
     $scope.initialPrice = [];
-    $scope.finalPrice = [];
-
-
+    $scope.finalPrice = {
+      vehiclePrice: 0,
+      paymentMethod: 0,
+      driverTips: 0,
+      price: 0,
+    };
 
     $scope.changedPayment = function () {
       if($scope.price === undefined){
         $scope.price = 0;
       }
-      console.dir($scope.initialPrice[0]);
       if ($scope.passenger.payment === 'Paypal/Credit'){
         $scope.paymentMethod = 0;
       }
@@ -45,38 +45,34 @@ angular.module('angularApp')
       if ($scope.passenger.payment === 'Bank Transfer'){
         $scope.paymentMethod = 30;
       }
-
-
-      $scope.price = $scope.paymentMethod + $scope.initialPrice[0];
-
-
+      $scope.finalPrice.paymentMethod = $scope.paymentMethod;
+      return $scope.finalPrice.paymentMethod;
     };
+    // $scope.finalPrice.push($scope.paymentMethod);
 
-    //TODO make the switchplaces function to react when the values are changed
-    $scope.switchPlaces = function () {
-      var pickup = document.getElementById('pickup').value;
-      $scope.pickup = pickup;
-      var dropoff = document.getElementById('dropoff').value;
-      $scope.dropoff = dropoff;
-      var tmp = $scope.pickup;
-
-      $scope.pickup = $scope.dropoff;
-      $scope.dropoff = tmp;
-    };
 
     $scope.tips = document.getElementById('tips').value;
-
+    $scope.price = 0;
     $scope.addDriverTips = function () {
-      $scope.price = parseInt($scope.initialPrice[0]) + parseInt($scope.tips);
-      if($scope.tips === ''){
+      $scope.finalPrice.driverTips = parseInt($scope.tips);
+      if($scope.tips === null){
         $scope.price = $scope.initialPrice[0];
       }
+      console.dir($scope.finalPrice);
+      return $scope.finalPrice.driverTips;
     };
+
+    // $scope.isNull = function () {
+    //   if ($scope.tips = '') {
+    //     $scope.tips = 0;
+    //     return $scope.tips;
+    //   }
+    // };
 
 
     $scope.changeCarType = function () {
       if($scope.passenger.number < 5){
-        $scope.passenger.vehicle = 'Saloon';
+
         if ($scope.vehicles.length == 2){
           $scope.vehicles.unshift({"Name": "Saloon"});
         }
@@ -86,7 +82,8 @@ angular.module('angularApp')
         }
       }
       if($scope.passenger.number == 5 || $scope.passenger.number > 5){
-        $scope.passenger.vehicle = 'MPV';
+        $scope.passenger.vehicle = "MPV";
+
         if ($scope.vehicles.length == 3){
           $scope.vehicles.splice(0,1);
         }
@@ -96,12 +93,27 @@ angular.module('angularApp')
 
       }
       if($scope.passenger.number == 8 ){
-        $scope.passenger.vehicle = '8-Seater';
+        $scope.passenger.vehicle = "8-Seater";
         if ($scope.vehicles.length == 2){
           $scope.vehicles.splice(0,1);
         }
-
       }
+
+
+    };
+
+    $scope.changeVehiclePrice = function () {
+      if($scope.passenger.vehicle == 'Saloon' || $scope.passenger.number < 5){
+        $scope.vehiclePrice = 0;
+      }
+      if($scope.passenger.vehicle == 'MPV' || ($scope.passenger.number >= 5 && $scope.passenger.number < 8)){
+        $scope.vehiclePrice = 5;
+      }
+      if($scope.passenger.vehicle == '8-Seater' || $scope.passenger.number == 8){
+        $scope.vehiclePrice = 10;
+      }
+      $scope.finalPrice.vehiclePrice = $scope.vehiclePrice;
+      return $scope.finalPrice.vehiclePrice;
     };
 
     var i = 1;
@@ -198,20 +210,10 @@ angular.module('angularApp')
 
 
 
-    $scope.changeVehiclePrice = function () {
-      if($scope.passenger.vehicle == 'Saloon' || $scope.passenger.number < 5){
-        $scope.vehiclePrice = 0;
-      }
-      if($scope.passenger.vehicle == 'MPV' || ($scope.passenger.number >= 5 && $scope.passenger.number < 8)){
-        $scope.vehiclePrice = 5;
-      }
-      if($scope.passenger.vehicle == '8-Seater' || $scope.passenger.number == 8){
-        $scope.vehiclePrice = 10;
-      }
-      $scope.price = $scope.vehiclePrice + $scope.initialPrice[0];
-    };
 
-    // TODO add via for directions on every via instance
+
+
+
     function initMap() {
 
       // Instantiate a directions service.
@@ -248,12 +250,10 @@ angular.module('angularApp')
       var searchBox = new google.maps.places.SearchBox(pickup);
       var searchBox2 = new google.maps.places.SearchBox(dropoff);
 
-
       map.addListener('bounds_changed', function () {
         searchBox.setBounds(map.getBounds());
         searchBox2.setBounds(map.getBounds());
       });
-
 
       var markers = [];
 
@@ -263,11 +263,6 @@ angular.module('angularApp')
         if (places.length == 0) {
           return;
         }
-
-        // TODO: add logic to add every parameter until the final price is done
-
-
-
         markers = [];
 
         var bounds = new google.maps.LatLngBounds();
@@ -324,22 +319,23 @@ angular.module('angularApp')
         });
 
         map.fitBounds(bounds);
-
+        $scope.onChangeHandler();
       });
 
-      var onChangeHandler = function() {
+      $scope.onChangeHandler = function() {
         $scope.calculateAndDisplayRoute(directionsService, directionsDisplay);
       };
-      document.getElementById('pickup').addEventListener('change', onChangeHandler);
-      document.getElementById('dropoff').addEventListener('change', onChangeHandler);
+      document.getElementById('pickup').addEventListener('change', $scope.onChangeHandler);
+      document.getElementById('dropoff').addEventListener('change', $scope.onChangeHandler);
     }
+
     $scope.waypts = [47.1565195, 27.6120205];
 
     $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
       var first = new google.maps.LatLng(47.094394, 25.963092);
       directionsService.route({
-        origin: document.getElementById('pickup').value,
-        destination: document.getElementById('dropoff').value,
+        origin: $scope.pickup,
+        destination: $scope.dropoff,
         // waypoints: [{location: first, stopover: true}],
         // optimizeWaypoints: true,
         travelMode: google.maps.TravelMode.DRIVING
@@ -356,14 +352,43 @@ angular.module('angularApp')
             $scope.initialPrice.unshift($scope.price);
           }
         }
-        });
+      });
+      $scope.switchPlaces = function () {
+        var pickup = document.getElementById('pickup').value;
+        $scope.pickup = pickup;
+        var dropoff = document.getElementById('dropoff').value;
+        $scope.dropoff = dropoff;
+        var tmp = $scope.pickup;
+
+        $scope.pickup = $scope.dropoff;
+        $scope.dropoff = tmp;
+        $scope.onChangeHandler();
+      };
+    };
+
+    $scope.calcFinalPrice = function () {
+      $scope.finalPrice.price =  parseInt($scope.finalPrice.vehiclePrice) + parseInt($scope.finalPrice.paymentMethod) + parseInt($scope.finalPrice.driverTips);
+      $scope.onChangeHandler();
     };
 
 
+    // Get Requests
+    // https://api-test.insoftd.com/v1/client/car_type/
+    // $http.get('https://api-test.insoftd.com/v1/client/car_type/')
+    //   .then(
+    //     function (response) {
+    //       var carTypes = response;
+    //       $scope.carTypes = carTypes.data;
+    //       $scope.carsTypes = carTypes.data[0].records;
+    //       console.dir($scope.carsTypes);
+    //     },
+    //     function (response) {
+    //       console.dir("GET METHOD DIDN'T WORK" + response);
+    //     });
+
     setTimeout(function(){
       initMap();
-    }, 1000);
-
-
+    }, 800);
   });
+
 

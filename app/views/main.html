@@ -80,7 +80,7 @@
       <div class="row">
         <div id="test"></div>
         <i class="fa fa-users"></i> <b>Number of Passengers:</b>
-        <select name="passengers" class="form-control" ng-change="changeCarType()" ng-model="passenger.number">
+        <select name="passengers" class="form-control" ng-change="changeCarType(); calcFinalPrice()" ng-model="passenger.number">
           <option value="{{passenger.number}}" ng-repeat="passenger in passengers">{{passenger.number}}</option>
         </select>
         <br>
@@ -89,7 +89,7 @@
         <div class="vehicle-title">
           <i class="fa fa-car"></i> <b>Vehicle:</b>  <i class="fa fa-briefcase blue"></i>x{{sLuggage}} <i class="fa fa-suitcase blue"></i>x{{bLuggage}} <i class="fa fa-users blue"></i>x{{passengerPlaces}}
         </div>
-      <select name="passengers.vehicle" class="form-control" ng-change="changeVehiclePrice()"  ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
+      <select name="passengers.vehicle" class="form-control" ng-change="changeVehiclePrice(); calcFinalPrice()"  ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
         <option value="{{vehicle.Name}}" ng-repeat="vehicle in vehicles">{{vehicle.Name}}</option>
       </select>
         <br>
@@ -98,14 +98,14 @@
       <div class="row">
         <i class="fa fa-info-circle"></i> <b>Payment method:</b>
 <!--ng-disabled="passengerForm.$invalid"-->
-        <select name="passenger.payment" class="form-control" ng-change="changedPayment()"   ng-model="passenger.payment" id="paymentMethods">
+        <select name="passenger.payment" class="form-control" ng-change="changedPayment(); calcFinalPrice()"   ng-model="passenger.payment" id="paymentMethods">
           <option value="{{payment.name}}" ng-repeat="payment in payments">{{payment.name}}</option>
         </select>
         <br>
       </div>
       <div class="row">
         <i class="fa fa-money"></i> <b>Driver tip:</b>
-         <input type="text" ng-change="addDriverTips()" placeholder="0$" ng-model="tips" ng-model-options="{ updateOn: 'blur' }" class="form-control "  id="tips">
+         <input type="text" ng-change="addDriverTips(); calcFinalPrice()" placeholder="0$" ng-model="tips" ng-model-options="{ updateOn: 'blur' }" class="form-control "  id="tips">
         <br>
       </div>
       <br>
@@ -150,7 +150,7 @@
       <h4>Distance: <span>{{distance}}</span> km</h4>
       <!--<h4>Price: $<span id="price"></span></h4>-->
       <!--TODO Fix the NaN if anything happens-->
-      <h4>Price: $<span >{{price}}</span></h4>
+      <h4>Price: $<span >{{finalPrice.price + price}}</span></h4>
 
 
     </div>
