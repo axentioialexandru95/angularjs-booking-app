@@ -18,7 +18,6 @@ angular.module('angularApp')
     $scope.passenger = {
       number: '1',
       vehicle: 'Saloon',
-      payment: 'Paypal/Credit'
     };
 
     $scope.initialPrice = [];
@@ -29,25 +28,26 @@ angular.module('angularApp')
       price: 0,
     };
 
-    $scope.changedPayment = function () {
-      if($scope.price === undefined){
-        $scope.price = 0;
-      }
-      if ($scope.passenger.payment === 'Paypal/Credit'){
-        $scope.paymentMethod = 0;
-      }
-      if ($scope.passenger.payment === 'Cash'){
-        $scope.paymentMethod = 20;
-      }
-      if ($scope.passenger.payment === 'Credit/Debit'){
-        $scope.paymentMethod = 10;
-      }
-      if ($scope.passenger.payment === 'Bank Transfer'){
-        $scope.paymentMethod = 30;
-      }
-      $scope.finalPrice.paymentMethod = $scope.paymentMethod;
-      return $scope.finalPrice.paymentMethod;
-    };
+
+    // $scope.changedPayment = function () {
+    //   if($scope.price === undefined){
+    //     $scope.price = 0;
+    //   }
+    //   if ($scope.passenger.payment === 'Paypal/Credit'){
+    //     $scope.paymentMethod = 0;
+    //   }
+    //   if ($scope.passenger.payment === 'Cash'){
+    //     $scope.paymentMethod = 20;
+    //   }
+    //   if ($scope.passenger.payment === 'Credit/Debit'){
+    //     $scope.paymentMethod = 10;
+    //   }
+    //   if ($scope.passenger.payment === 'Bank Transfer'){
+    //     $scope.paymentMethod = 30;
+    //   }
+    //   $scope.finalPrice.paymentMethod = $scope.paymentMethod;
+    //   return $scope.finalPrice.paymentMethod;
+    // };
     // $scope.finalPrice.push($scope.paymentMethod);
 
 
@@ -135,20 +135,6 @@ angular.module('angularApp')
     };
 
     $scope.showVia = false;
-    $scope.payments = [
-      {
-        "name": "Paypal/Credit"
-      },
-      {
-        "name": "Credit/Debit"
-      },
-      {
-        "name": "Cash"
-      },
-      {
-        "name": "Bank Transfer"
-      }
-    ];
     $scope.passengers =
       [
         {
@@ -176,18 +162,6 @@ angular.module('angularApp')
           number: 8
         }
       ];
-    $scope.vehicles =
-      [
-        {
-          "Name": "Saloon"
-        },
-        {
-          "Name": "MPV"
-        },
-        {
-          "Name": "8-Seater"
-        }
-      ];
 
     // TODO make the luggage implementation via vehicle changes
     // $scope.changeLuggage = function () {
@@ -207,10 +181,6 @@ angular.module('angularApp')
     //     $scope.passengerPlaces= 8;
     //   };
     // }
-
-
-
-
 
 
 
@@ -372,19 +342,39 @@ angular.module('angularApp')
     };
 
 
-    // Get Requests
+    // Get Requests - Car types
     // https://api-test.insoftd.com/v1/client/car_type/
-    // $http.get('https://api-test.insoftd.com/v1/client/car_type/')
-    //   .then(
-    //     function (response) {
-    //       var carTypes = response;
-    //       $scope.carTypes = carTypes.data;
-    //       $scope.carsTypes = carTypes.data[0].records;
-    //       console.dir($scope.carsTypes);
-    //     },
-    //     function (response) {
-    //       console.dir("GET METHOD DIDN'T WORK" + response);
-    //     });
+    $http({
+      Method: 'GET',
+      url: 'https://api-test.insoftd.com/v1/client/car_type/',
+      headers: {'Authorization': 'Basic cG9wb3ZpY2kudHVkb3JAeWFob28uY29tOmFzZGFzZGFzZEB8QDI0OA=='}
+    })
+      .then(
+        function (response) {
+          var carTypes = response;
+          $scope.carTypes = carTypes.data.records;
+        },
+        function (response) {
+          console.dir("GET METHOD DIDN'T WORK" + response);
+        });
+
+    // Get Requests - Payment Methods
+    //https://api-test.insoftd.com/v1/operator/config
+    $http({
+      Method: 'GET',
+      url: 'https://api-test.insoftd.com/v1/operator/config',
+      headers: {'Authorization': 'Basic cG9wb3ZpY2kudHVkb3JAeWFob28uY29tOmFzZGFzZGFzZEB8QDI0OA=='}
+    })
+      .then(
+        function (response) {
+          var paymentMethods = response;
+          $scope.paymentMethods = paymentMethods.data.records;
+
+        },
+        function (response) {
+          console.dir("GET METHOD DIDN'T WORK" + response);
+        });
+
 
     setTimeout(function(){
       initMap();

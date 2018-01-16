@@ -1,30 +1,30 @@
 <div class="container">
-                <form name="passengerForm" action="" class="col-sm-12" >
-                  <div class="col-sm-6">
-                    <div class="row">
-                      <div class="well">
-                        <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
-                        <div>
-                          <div class="row" ng-controller="DatepickerCtrl">
-                            <div class="col-sm-6">
-                              <p class="input-group">
-                                <input required  ng-required="true" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
-                                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                  </span>
-                              </p>
-                            </div>
-                            <div class="col-sm-6">
-                  <select class="form-control" ng-required="true" required ng-options="label for label in hours" ng-model="selectedHour" name="selectedHour"  style="float: left; width: calc(50% - 5px);">
-                  <option>{{label}}</option>
+  <form name="passengerForm" action="" class="col-sm-12" >
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="well">
+            <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
+            <div>
+              <div class="row" ng-controller="DatepickerCtrl">
+                <div class="col-sm-6">
+                  <p class="input-group">
+                    <input required  ng-required="true" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+                  </p>
+                </div>
+                <div class="col-sm-6">
+      <select class="form-control" ng-required="true" required ng-options="label for label in hours" ng-model="selectedHour" name="selectedHour"  style="float: left; width: calc(50% - 5px);">
+      <option>{{label}}</option>
 
-                </select>
-                <strong style="position:relative; top: 6px; left: 3px">:</strong>
-                <select name="" ng-required="true" ng-options="item for item in minutes" required ng-model="selectedMinute" class="form-control" style="float: right; width: calc(50% - 5px)">
-                  <option>{{item}}</option>
-                </select>
-              </div>
-            </div>
+    </select>
+    <strong style="position:relative; top: 6px; left: 3px">:</strong>
+      <select name="" ng-required="true" ng-options="item for item in minutes" required ng-model="selectedMinute" class="form-control" style="float: right; width: calc(50% - 5px)">
+        <option>{{item}}</option>
+      </select>
+      </div>
+    </div>
 
           </div>
         </div>
@@ -58,9 +58,6 @@
         <add-via-input ng-repeat="v in Via"></add-via-input>
       </div>
 
-
-
-
       <br>
       <div class="row">
         <div class="input-group">
@@ -90,7 +87,7 @@
           <i class="fa fa-car"></i> <b>Vehicle:</b>  <i class="fa fa-briefcase blue"></i>x{{sLuggage}} <i class="fa fa-suitcase blue"></i>x{{bLuggage}} <i class="fa fa-users blue"></i>x{{passengerPlaces}}
         </div>
       <select name="passengers.vehicle" class="form-control" ng-change="changeVehiclePrice(); calcFinalPrice()"  ng-model="passenger.vehicle" name="passengers.vehicle" id="passengers">
-        <option value="{{vehicle.Name}}" ng-repeat="vehicle in vehicles">{{vehicle.Name}}</option>
+        <option value="{{car.type}}" ng-repeat="car in carTypes">{{car.type}}</option>
       </select>
         <br>
       </div>
@@ -98,8 +95,9 @@
       <div class="row">
         <i class="fa fa-info-circle"></i> <b>Payment method:</b>
 <!--ng-disabled="passengerForm.$invalid"-->
-        <select name="passenger.payment" class="form-control" ng-change="changedPayment(); calcFinalPrice()"   ng-model="passenger.payment" id="paymentMethods">
-          <option value="{{payment.name}}" ng-repeat="payment in payments">{{payment.name}}</option>
+        {{passenger.payment}}
+        <select name="passenger.payment" class="form-control"  ng-model="passenger.payment" id="paymentMethods">
+          <option value="{{value}}" ng-repeat="(key, payment) in paymentMethods.activePayments">{{payment}}</option>
         </select>
         <br>
       </div>
@@ -149,14 +147,13 @@
       <hr>
       <h4>Distance: <span>{{distance}}</span> km</h4>
       <!--<h4>Price: $<span id="price"></span></h4>-->
-      <!--TODO Fix the NaN if anything happens-->
       <h4>Price: $<span >{{finalPrice.price + price}}</span></h4>
 
+      <hr>
 
     </div>
     <button type="submit" value="submit" class="form-control btn btn-default" ng-disabled="passengerForm.$invalid"><i class="fa fa-floppy-o"></i> Confirm Booking</button>
     <br>
-
   </form>
 </div>
 
