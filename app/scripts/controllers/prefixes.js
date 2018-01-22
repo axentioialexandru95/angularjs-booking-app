@@ -8,17 +8,14 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('PrefixesCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('PrefixesCtrl', ['$scope', '$http', '$rootScope', function ($scope, $rootScope, $http) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
-    $scope.passenger = {
-      prefix:  'Ro'
-    };
 
-    // TODO try to get the prefix to get written inside the value of Phone Number input
+
 
     // $http.get('/data/prefixes.json')
     //   .then(
@@ -33,9 +30,7 @@ angular.module('angularApp')
     //       console.dir("GET METHOD DIDN'T WORK" + response);
     //     });
 
-    $scope.updatePrefixPhone = function () {
-      $scope.passenger.phonenumber = $scope.passenger.prefix;
-    };
+
 
     $scope.prefixes = [{
       "Name": "Afghanistan",

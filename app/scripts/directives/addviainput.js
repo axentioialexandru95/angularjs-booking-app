@@ -11,7 +11,7 @@ angular.module('angularApp')
     return {
       restrict: 'E',
       templateUrl: 'views/viaTemplate.html',
-      controller: function ($rootScope, $scope, $element) {
+      controller: function ($rootScope, $scope) {
         $scope.contacts = $rootScope.GetContactTypes;
       }
     };

@@ -1,0 +1,34 @@
+<div ng-controller="LoginCtrl">
+  <!--<div ng-show="error" class="alert alert-danger">{{error}}</div>-->
+  <div class="background">
+    <div class="well container" id="login-form">
+      <h4 class="text-center">Authentication</h4>
+      <p class="text-center"><i class="glyphicon glyphicon-star"></i>You need to authenticate before creating a new booking. <i class="glyphicon glyphicon-star"></i></p>
+      <hr>
+      <form name="loginForm" ng-submit="onLogin()" role="form">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="glyphicon glyphicon-user"></i>
+          </div>
+          <input type="email" class="form-control" placeholder="Email address" ng-required="true" minlength="3" name="username" id="username"  ng-model="mailLogin">
+          <div class="input-group-addon">
+            <i class="glyphicon glyphicon-remove"></i>
+          </div>
+        </div>
+        <br>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="glyphicon glyphicon-lock"></i>
+          </div>
+          <input type="password" class="form-control" placeholder="Password" ng-required="true" minlength="3" name="password" id="password" ng-model="passwordLogin">
+          <div class="input-group-addon">
+            <i class="glyphicon glyphicon-remove"></i>
+          </div>
+        </div>
+        <br>
+        <button type="submit" ng-disabled="loginForm.$invalid" class="form-control btn-default">Submit</button>
+
+      </form>
+    </div>
+  </div>
+</div>

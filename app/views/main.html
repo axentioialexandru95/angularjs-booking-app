@@ -1,77 +1,71 @@
-<div class="container">
-  <form name="passengerForm" action="" class="col-sm-12" >
+<div class="container" id="booking-form">
+  <div class="alert alert-danger" ng-if="!loggedIn"> You must first login before creating a new booking.</div>
+  <form name="passengerForm" ng-submit="sendBooking()" class="col-sm-12" >
       <div class="col-sm-6">
         <div class="row">
           <div class="well">
             <i class="fa fa-info-circle"></i> <b>Pickup time:</b> <br> <br>
             <div>
-              <div class="row" ng-controller="DatepickerCtrl">
-                <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-6" style="padding-right: 0px">
                   <p class="input-group">
-                    <input required  ng-required="true" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" />
+                    <input   ng-required="true" type="text" class="form-control" ng-change="changeDate()" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" id="datepicker"/>
                     <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-      </span>
+                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
                   </p>
                 </div>
-                <div class="col-sm-6">
-      <select class="form-control" ng-required="true" required ng-options="label for label in hours" ng-model="selectedHour" name="selectedHour"  style="float: left; width: calc(50% - 5px);">
-      <option>{{label}}</option>
-
-    </select>
-    <strong style="position:relative; top: 6px; left: 3px">:</strong>
-      <select name="" ng-required="true" ng-options="item for item in minutes" required ng-model="selectedMinute" class="form-control" style="float: right; width: calc(50% - 5px)">
-        <option>{{item}}</option>
-      </select>
-      </div>
-    </div>
-
+                <div class="col-sm-6" style="padding-left: 5px">
+              <select class="form-control" ng-required="true"  ng-options="label for label in hours" ng-change="changeDate()" ng-model="passenger.selectedHour" name="selectedHour" id="selectedHour" style="float: left; width: calc(50% - 5px);">
+              </select>
+              <strong style="position:relative; top: 6px; left: 3px">:</strong>
+              <select name="" ng-required="true" ng-options="item for item in minutes" ng-change="changeDate()" ng-model="passenger.selectedMinute" class="form-control" id="selectedMinute" style="float: right; width: calc(50% - 5px)">
+              </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="input-group">
           <div class="input-group-addon">
             <span class="glyphicon glyphicon-pushpin"></span>
           </div>
-          <input type="text" id="pickup" class="form-control pac-input" name="pickup"  ng-valid  ng-required="true" placeholder="Pickup address [ALT + P]" ng-model="pickup">
-
+          <input type="text" id="pickup" class="form-control pac-input" name="pickup"  ng-valid  ng-change="onChangeHandler()" ng-required="true" placeholder="Pickup address [ALT + P]" ng-model="pickup">
           <div class="input-group-addon" ng-click="pickup = ''" style="cursor: pointer">
             <span class="glyphicon glyphicon-remove"></span>
           </div>
         </div>
-
       </div>
       <br>
       <div class="row">
-        <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Meeting point details"></textarea>
+        <textarea name="" id="" cols="30" rows="3" class="form-control" ng-model="passenger.pickupDetails" placeholder="Meeting point details"></textarea>
       </div>
       <br>
       <div class="row">
         <div class="btn-group">
-          <button class="btn btn-primary" ng-click="addTemplate()" ng-disabled="Via.length < 5" uib-tooltip="Add Via point" ng-model="viaButton" uib-btn-checkbox id="viaButton"><i class="glyphicon glyphicon-plus"></i> VIA</button>
-          <button class="btn btn-primary" ng-model="checkModel.right" ng-click="switchPlaces()" uib-tooltip="Switch Adresses" uib-btn-checkbox><i class="fa fa-exchange" style="transform: rotate(90deg)"></i> Switch</button>
+          <button class="btn btn-primary" type="button" ng-click="addTemplate()" ng-disabled="Via.length == 5" uib-tooltip="Add Via point" ng-model="viaButton" id="viaButton"><i class="glyphicon glyphicon-plus"></i> VIA</button>
+          <button class="btn btn-primary" type="button" ng-model="checkModel.right" ng-click="switchPlaces()" uib-tooltip="Switch Adresses"><i class="fa fa-exchange" style="transform: rotate(90deg)"></i> Switch</button>
         </div>
       </div>
       <div id="viaInputPlace" ng-if="Via.length">
         <add-via-input ng-repeat="v in Via"></add-via-input>
       </div>
-
       <br>
       <div class="row">
         <div class="input-group">
           <div class="input-group-addon">
             <span class="fa fa-flag-checkered"></span>
           </div>
-          <input type="text" id="dropoff" class="form-control" ng-required="true" required ng-model="dropoff" name="dropoff" placeholder="Dropoff address [ALT + D]">
+          <input type="text" id="dropoff" class="form-control" ng-required="true"  ng-model="dropoff" ng-change="onChangeHandler()" name="dropoff" placeholder="Dropoff address [ALT + D]">
           <div class="input-group-addon" ng-click="dropoff = ' '" style="cursor: pointer;">
             <span class="glyphicon glyphicon-remove"></span>
           </div>
         </div>
       </div>
+        <br>
       <div class="row">
-        <textarea class="form-control" name="" cols="30" rows="3" placeholder="Dropoff details" style="margin-top: 5px;"></textarea>
+        <textarea class="form-control" name="" cols="30" rows="3" ng-model="passenger.dropoffDetails" placeholder="Dropoff details" style="margin-top: 5px;"></textarea>
       </div>
       <br>
       <div class="row">
@@ -94,16 +88,14 @@
 
       <div class="row">
         <i class="fa fa-info-circle"></i> <b>Payment method:</b>
-<!--ng-disabled="passengerForm.$invalid"-->
-        {{passenger.payment}}
-        <select name="passenger.payment" class="form-control"  ng-model="passenger.payment" id="paymentMethods">
-          <option value="{{value}}" ng-repeat="(key, payment) in paymentMethods.activePayments">{{payment}}</option>
+        <select name="passenger.payment" class="form-control" ng-change="changePayments()" ng-model="passenger.payment" id="paymentMethods">
+          <option value="{{payment.name}}" ng-repeat="(key, payment) in paymentMethods.paymentMethods">{{payment.name}}</option>
         </select>
         <br>
       </div>
       <div class="row">
         <i class="fa fa-money"></i> <b>Driver tip:</b>
-         <input type="text" ng-change="addDriverTips(); calcFinalPrice()" placeholder="0$" ng-model="tips" ng-model-options="{ updateOn: 'blur' }" class="form-control "  id="tips">
+         <input type="number" min="0" ng-change="addDriverTips(); calcFinalPrice()" placeholder="0$" ng-model="tips" ng-model-options="{ updateOn: 'blur' }" class="form-control "  id="tips">
         <br>
       </div>
       <br>
@@ -115,45 +107,50 @@
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-user"></span>
         </div>
-        <input type="text" aria-describedby="basic-addon1" ng-model="passenger.name" ng-required="true" placeholder="Passenger full name" class="form-control" required>
+        <input type="text" aria-describedby="basic-addon1" ng-model="passenger.name" ng-required="true" placeholder="Passenger full name" class="form-control" >
       </div>
       <br>
       <div class="input-group">
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-envelope"></span>
         </div>
-        <input type="email" class="form-control" name="email" ng-model="data.email" required minlength="5"   required maxlength="100" email-address-valability-validator placeholder="Passenger email">
+        <input type="email" class="form-control" name="email" ng-model="passenger.email"  ng-required="true" minlength="5" maxlength="100" email-address-valability-validator placeholder="Passenger email">
       </div>
       <br>
-      <div class="row">
-        <div class="input-group">
+      <div ng-controller="PrefixesCtrl">
+        <div class="input-group" style="width: calc(50% - 2px); float:left">
           <div class="input-group-addon" id="position-fix-addon">
             <span class="glyphicon glyphicon-phone"></span>
           </div>
-          <div class="col-sm-6" ng-controller="PrefixesCtrl">
-            <select name="passenger.prefix" ng-change="updatePrefixPhone()" class="form-control" style="font-weight: 600;" required ng-model="passenger.prefix" >
-              <option value="{{prefix.Code}}" ng-repeat="prefix in prefixes">{{prefix.ISO | uppercase}} +{{prefix.Code}}</option>
-            </select>
-          </div>
-          <div class="col-sm-6">
-            <input type="text" name="phone.number" value="{{passenger.prefix}}"  class="form-control" required ng-model="passenger.phonenumber" ng-required="true">
-          </div>
+          <select name="passenger.prefix" ng-required="true" ng-change="prefixChange()" ng-model="passenger.prefix" class="form-control" style="font-weight: 600;"   >
+            <option value="{{prefix.Code}}" ng-repeat="prefix in prefixes">{{prefix.ISO | uppercase}} + {{prefix.Code}}</option>
+          </select>
+
         </div>
+          <div style="width: calc(45% - 2px); float: right;">
+            <input type="text" name="phone.number" ng-required="true" placeholder="Phone Number" class="form-control"  ng-model="passenger.phoneNumber" ng-required="true">
+          </div>
       </div>
+
+      <br>
+      <br>
       <br>
       <textarea class="form-control" name="" id="" cols="30" rows="3" placeholder="Notes to company, address details or other information"></textarea>
       <br>
       <input type="text" placeholder="Redeem voucher" class="form-control">
       <hr>
-      <h4>Distance: <span>{{distance}}</span> km</h4>
+      <h4 style="color: royalblue">Distance: <span>{{distance}}</span> km</h4>
       <!--<h4>Price: $<span id="price"></span></h4>-->
-      <h4>Price: $<span >{{finalPrice.price + price}}</span></h4>
+      <h4 style="color: orangered">Price: $<span >{{finalPrice.price}}</span></h4>
 
       <hr>
-
+    <span am-time-ago="timeTest.time"></span>
     </div>
     <button type="submit" value="submit" class="form-control btn btn-default" ng-disabled="passengerForm.$invalid"><i class="fa fa-floppy-o"></i> Confirm Booking</button>
     <br>
+
   </form>
+
 </div>
+
 
