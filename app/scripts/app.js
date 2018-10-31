@@ -52,7 +52,7 @@ angular
         $http.defaults.headers.common['Authorization'] = 'Basic' + localStorageService.get('basic');
       }
       else {
-        $location.path('/login');
+        $location.path('/');
       }
     });
   }]);
